@@ -57,6 +57,13 @@ export default function SignInForm() {
       if (data.user?.role !== "vendor") {
         throw new Error("Access restricted to vendors only");
       }
+      if (data.user.role === "vendor" && data.user.vendorIsApproved === 0) {
+        throw new Error(
+          "Your vendor application is still under review. Please wait for approval."
+        );
+        setLoading(false);
+        return;
+      }
       login(data.token, data.refreshToken, data.user, data.expiresIn);
       navigate("/");
     } catch (err) {
@@ -156,7 +163,6 @@ export default function SignInForm() {
       });
     },
   });
-
 
   const [showPassword, setShowPassword] = useState(false);
   return (

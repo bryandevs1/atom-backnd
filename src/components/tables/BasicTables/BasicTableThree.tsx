@@ -147,16 +147,26 @@ export default function VendorProductsTable() {
   };
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files[0];
-    const maxSize = 100 * 1024 * 1024; // 100MB
+    const maxSize = 2000 * 1024 * 1024; // 100MB
+    console.log("Selected file type:", selectedFile.type);
+
     const allowedTypes = [
       "application/pdf",
       "audio/mp3",
       "video/mp4",
       "application/zip",
+      "application/x-zip-compressed", // <- ADD THIS
     ];
 
+    const fileExtension = selectedFile.name.split(".").pop().toLowerCase();
+
+    if (!allowedTypes.includes(selectedFile.type) && fileExtension !== "zip") {
+      setErrorrAdding("Unsupported file type");
+      return;
+    }
+
     if (selectedFile.size > maxSize) {
-      setErrorrAdding("File size exceeds 100MB limit");
+      setErrorrAdding("File size exceeds 2GB limit");
       return;
     }
 
